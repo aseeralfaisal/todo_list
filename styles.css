@@ -281,17 +281,16 @@ body {
   margin-top: 20px;
   font-size: 20px;
   padding: 8px 15px;
-  background: #00a2d4;
+  background: grey;
   border-radius: 4px;
   color: #fff;
   outline: none;
-  border: 1px solid #e6e6e6;
   cursor: pointer;
   transition: 0.3s all ease-in-out;
 }
 
 .submit:hover {
-  background: #0292be;
+  background: grey;
   transition: 0.3s all ease-in-out;
 }
 
@@ -318,4 +317,9 @@ body {
 
 .weather-img {
   width: 150px;
+}
+.fa-gradient {
+	background: -webkit-gradient(linear, left top, left bottom, from(#333), to(#777));
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
 }

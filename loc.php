@@ -6,9 +6,37 @@ $username = $_SESSION['username'];
 if (!$username) {
     header("Location: ./login.php");
 }
-if(isset($_POST['cancel'])){
-    header("Location: ./index.php");
+
+if (mysqli_connect_error()) {
+    die($conn->connect_error);
+} else {
+    $results = mysqli_query($conn, "SELECT * FROM `todos`  WHERE `user` = " . $_SESSION['userid'] . " ORDER BY id DESC");
+    // print_r($results);
+    // $results = mysqli_query($conn, "SELECT * FROM ".$_SESSION['userid']." ");
 }
+
+$json = file_get_contents('timezones.json');
+$json_data = json_decode($json, true);
+// foreach ($json_data as $key => $value) {
+//     echo var_dump($value['group']);
+// }
+
+$timezone = new DateTime("now", new DateTimeZone('America/los_angeles'));
+$date = $timezone->format('Y-m-d');
+$str =  substr($date, 8);
+$currentDate = (int)$str;
+
+$ip_address = file_get_contents('http://checkip.dyndns.com/');
+$PublicIP = str_replace("Current IP Address: ", "", $ip_address);
+$json = file_get_contents("http://ip-api.com/json");
+$jsonResult = json_decode($json, true);
+
+if (isset($_POST['submit'])) {
+    $cookie_name = "zone";
+    $cookie_value = $_POST['timezone'];
+    setcookie($cookie_name, $cookie_value, time() + (86400 * 30), "/");
+}
+// echo $_COOKIE['zone'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -71,40 +99,29 @@ if(isset($_POST['cancel'])){
                 </a>
             </div>
         </div>
-        <div class="main index">
-            <h2>Add New Todo</h2>
-            <div class="">
-                <?php
-                if (isset($_GET['error'])) {
-                    if ($_GET['error'] == "emptyfields") {
-                        echo '<div class="alert-danger">Fill in all fields!</div>';
-                    } else if ($_GET['error'] == "sqlerror" || $_GET['error'] == "submit") {
-                        echo '<div class="alert-danger">Something went wrong!</div>';
-                    }
-                }
-                if (isset($_GET['added'])) {
-                    if ($_GET['added'] == "success") {
-                        echo '<div class="alert-success">Todo added!</div>';
-                    }
-                }
-                ?>
-            </div>
-            <div class="add">
-                <form action="./inc/add-todo.php" method="POST" class="form">
-                    <div class="">
-                        <label for="title">Title</label>
-                        <input id="title" type="text" placeholder="Title of Todo" name="title" class="form-control" require>
-                    </div>
-                    <div class="">
-                        <label for="date">Date</label>
-                        <input id="date" type="date" placeholder="date of Todo" name="date" class="form-control" value="<?php echo date('Y-m-d'); ?>" require>
-                    </div>
-                    <div class="">
-                        <label for="description">Description</label>
-                        <textarea name="description" id="description" class="desc" cols="10" rows="10"></textarea>
-                    </div>
-                    <input class="button" style="background: #444; border: none; color: #fff; padding: 10px 20px;" value="Add" type="submit" name="submit">
+        <div class="main index" style="margin-top: 40px;">
+
+            <div style="margin-left: 70px;" style="background: #d0e0e6; padding: 20px;">
+                <form action="loc.php" method="POST">
+                    <select name="timezone" id="timezone" style="padding: 7px 20px; font-size: 16px;">
+                        <option value=<?php echo $_COOKIE['zone']; ?>><?php echo $_COOKIE['zone']; ?></option>
+                        <option value="Asia/Dhaka">Asia/Dhaka</option>
+                        <option value="America/New_York">America/New_York</option>
+                        <option value="America/New_York">Asia/Kolkata</option>
+                        <option value="America/New_York">Europe/London</option>
+                        <input id="btn" type="submit" value="Save" name="submit" style="background: #444; border: none; color: #fff; padding: 10px 20px;">
+
+                    </select><br>
                 </form>
+                <div style="margin-top: 20px; margin-left: 5px;">
+                    <?php
+                    foreach ($jsonResult as $key => $value) {
+                        echo '<label style="text-transform: capitalize; font-size: 20px; color: #333; font-weight: bold">' . $key . ':</label> 
+                    <label style="text-transform: capitalize; font-size: 20px; margin-left: 6px; color: #333">' . $value . '</label>
+                    <br>';
+                    }
+                    ?>
+                </div>
             </div>
         </div>
     </div>

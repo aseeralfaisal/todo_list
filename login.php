@@ -13,7 +13,8 @@ if (isset($_POST['login'])) {
     $users = mysqli_query($db, "SELECT * FROM users");
     foreach ($users as $user) {
         if ($user['name'] == $name && $user['pass'] == $pass) {
-            $_SESSION['userid'] = $user['name'];
+            // $_SESSION['userid'] = $user['name'];
+            $_SESSION['userid'] = $user['id'];
             // echo "Welcome " . $user['name'] . "id = ".$user['id'];
             // $cookie_value = $_SESSION['userid'];
             // setcookie($cookie_name, $cookie_value, time() + (86400 * 30), "/"); 

@@ -18,11 +18,12 @@ if (mysqli_connect_error()) {
 // print_r(getdate()['mon']);
 // print_r(getdate()['mday']);
 
-$date = date('Y-m-d');
+$timezone = new DateTime("now", new DateTimeZone($_COOKIE['zone']));
+$date = $timezone->format('Y-m-d');
 $str =  substr($date, 8);
 $currentDate = (int)$str;
 
-
+// echo $_COOKIE['zone'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -36,27 +37,27 @@ $currentDate = (int)$str;
     <div class="wrapper">
         <div class="sidebar">
             <div style="display: flex; align-items: center;">
-                <i id="icon" class="far fa-calendar-check" style="font-size: 28px; margin: 6px; color: #333;"></i>
+                <i id="icon" class="far fa-calendar-check fa-gradient" style="font-size: 28px; margin: 6px; color: #333;"></i>
                 <label class="logo" style="margin-top: 7px; color: #333; font-family: 'Comfortaa'; font-size: 20px; font-weight: bold;">
                     ToDo List</label>
                 <div class="close">
                     <span class="fas fa-bars" style="color: #333;"></span>
                 </div>
                 <div class="user" style="margin-left: 20px; margin-bottom: 8px;">
-                    <span class="fas fa-user-circle" style="color: #333; font-size: 28px;"></span>
+                    <span class="fas fa-user-circle" style="color: #555; font-size: 28px;"></span>
                     <label style="font-family: 'Comfortaa'; font-size: 16px; font-weight: bold; text-transform: uppercase;">
                         <?php echo '<lebel>' . $username . '</label>' ?></label>
                 </div>
             </div>
-            <ul style="margin-top: -12px;">
+            <ul style="margin-top: -220px;">
                 <li class="active"><a href="index.php">
-                        <span style="font-size: 32px; color: #333;" class="fas fa-check-circle"></span>
+                        <span style="font-size: 32px; color: #333;" class="fas fa-check-circle fa-gradient"></span>
                         <label style="font-family: 'Comfortaa'; font-size: 16px; font-weight: bold;">
                             Dashboard
                         </label>
                     </a></li>
                 <li class=""><a href="add.php">
-                        <span class="fas fa-calendar-plus" style="font-size: 32px; color: #333;">
+                        <span class="fas fa-calendar-plus fa-gradient" style="font-size: 32px; color: #333;">
                         </span>
                         <label style="font-family: 'Comfortaa'; font-size: 16px; font-weight: bold;">
                             Add Todo
@@ -64,18 +65,18 @@ $currentDate = (int)$str;
                     </a></li>
                 <li>
                     <a style="display: flex; align-items: center;" href="weather.php">
-                        <span class="fas fa-cloud-rain" style="font-size: 32px;  color: #333;">
+                        <span class="fas fa-cloud-rain fa-gradient" style="font-size: 32px;  color: #333;">
                         </span style="font-size: 40px;">
                         <label style="font-family: 'Comfortaa'; font-size: 16px; font-weight: bold;">Weather Update</label>
                     </a>
                 </li>
-                <!-- <li>
-                    <a style="display: flex; align-items: center;" href="location2.php">
-                        <span class="fas fa-street-view" style="font-size: 32px;  color: #333;">
+                <li>
+                    <a style="display: flex; align-items: center;" href="loc.php">
+                        <span class="fas fa-cogs fa-gradient" style="font-size: 32px;  color: #333;">
                         </span style="font-size: 40px;">
-                        <label style="font-family: 'Comfortaa'; font-size: 16px; font-weight: bold;">Location</label>
+                        <label style="font-family: 'Comfortaa'; font-size: 16px; font-weight: bold;">Settings</label>
                     </a>
-                </li> -->
+                </li>
             </ul>
             <div class="out">
                 <a style="display: flex; align-items: center;" href="./inc/logout.php"> <span class="fas fa-sign-out-alt" style="font-size: 32px;  color: #333;"></span>
@@ -112,6 +113,12 @@ $currentDate = (int)$str;
                     </div>
                     <div class="dashboard">
                         <?php
+                        if (mysqli_num_rows($results) <= 0) {
+                            echo '<div>
+                                <i class="fas fa-list" style="font-size: 120px; color: lightgreen;"></i>
+                            </div>';
+                            echo "<label style='color: grey; font-size: 30px;'>No todos are added yet!</label>";
+                        }
                         foreach ($results as $result) {
                             $todoDateStr = substr($result['date'], 8);
                             $todoDate = (int)$todoDateStr;
@@ -123,11 +130,12 @@ $currentDate = (int)$str;
                                         <h3 style="font-family: 'Comfortaa'; font-weight: bold; text-transform: capitalize;"><?php echo $result['title'] ?></h3>
                                         <p style="font-family: 'Comfortaa'; font-weight: bold;"><?php echo $result['description'] ?></p>
                                         <div class="date">
-                                            <span class="fas fa-calendar-alt"></span> <?php
-                                                                                        echo '
-                                                                                        <label style="font-family: Comfortaa; font-weight: bold;">' . $result['date'] . '</label>
-                                                                                        ';
-                                                                                        ?>
+                                            <span class="fas fa-calendar-alt"></span>
+                                            <?php
+                                            echo '
+                                            <label style="font-family: Comfortaa; font-weight: bold;">' . $result['date'] . '</label>
+                                            ';
+                                            ?>
                                         </div>
                                         <div class="border-top">
                                             <a href="./inc/delete.php?id=<?php echo $result['id'] ?>" class="trash"><span class="far fa-trash-alt"></span>
@@ -152,8 +160,8 @@ $currentDate = (int)$str;
                                             <span class="fas fa-calendar-alt"></span>
                                             <?php
                                             echo '
-                                        <label style="color: red; font-family: Comfortaa; font-weight: bold;">' . $result['date'] . '</label>
-                                        ';
+                                            <label style="color: red; font-family: Comfortaa; font-weight: bold;">' . $result['date'] . '</label>
+                                            ';
                                             ?>
 
                                         </div>
@@ -180,12 +188,17 @@ $currentDate = (int)$str;
                 </div>
                 <div class="compeleted">
                     <div class="title" style="font-family: 'Comfortaa'; font-weight: bold;">
-                    <i class="fas fa-check-double" style="font-size: 22px; color: lightblue;"></i>
+                        <i class="fas fa-check-double" style="font-size: 22px; color: lightblue;"></i>
                         Competed
                     </div>
                     <div class="dashboard-done">
-
                         <?php
+                        if (mysqli_num_rows($results) <= 0) {
+                            echo '<div>
+                                <i class="fas fa-check-double" style="font-size: 120px; color: lightblue;"></i>
+                                </div>';
+                            echo "<label style='color: grey; font-size: 30px;'>Completed todos will appear here!</label>";
+                        }
                         foreach ($results as $result) {
                             if ($result['done'] == 1) {
                         ?>
