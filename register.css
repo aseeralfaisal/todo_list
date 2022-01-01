@@ -2,29 +2,14 @@
 * {
     font-family: 'Poppins', sans-serif;
 }
-
 #icon {
     display: flex;
     justify-content: center;
     font-size: 100px;
 }
-
 .title {
     color: #222222;
 }
-
-
-/* @keyframes animate {
-    0% {
-        transform: rotate(0deg);
-    }
-    50% {
-        transform: rotate(-8deg);
-    }
-    100% {
-        transform: rotate(8deg);
-    }
-} */
 
 body {
     background-color: rgb(232, 232, 232);
@@ -36,11 +21,9 @@ body {
     flex-direction: column;
     align-items: center;
 }
-
 .msg {
     color: #d42828;
 }
-
 .form {
     display: flex;
     flex-direction: column;
@@ -52,12 +35,10 @@ body {
     padding: 30px;
     width: 260px;
 }
-
 .form i {
     margin: 30px 0;
     color: #333333;
 }
-
 .form input {
     margin: 10px;
     text-align: center;
@@ -69,7 +50,6 @@ body {
     border: 1.2px solid rgba(170, 170, 170, 0);
     width: 220px;
 }
-
 #submit {
     width: 235px;
     color: #fff;

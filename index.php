@@ -1,29 +1,21 @@
 <?php
 session_start();
-$conn = mysqli_connect("localhost", "root", "", "todos");
+$conn = mysqli_connect("localhost", "root", "2021->2022", "todos");
 $username = $_SESSION['username'];
-
 if (!$username) {
     header("Location: ./login.php");
 }
-
 if (mysqli_connect_error()) {
     die($conn->connect_error);
 } else {
     $results = mysqli_query($conn, "SELECT * FROM `todos`  WHERE `user` = " . $_SESSION['userid'] . " ORDER BY id DESC");
 }
-
-// print_r(getdate());
-// print_r(getdate()['year']);
-// print_r(getdate()['mon']);
-// print_r(getdate()['mday']);
-
 $timezone = new DateTime("now", new DateTimeZone($_COOKIE['zone']));
 $date = $timezone->format('Y-m-d');
+$year = substr($date, 0, 4);
+$currentYear = (int)$year;
 $str =  substr($date, 8);
 $currentDate = (int)$str;
-
-// echo $_COOKIE['zone'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -120,10 +112,12 @@ $currentDate = (int)$str;
                             echo "<label style='color: grey; font-size: 30px;'>No todos are added yet!</label>";
                         }
                         foreach ($results as $result) {
+                            $todoYearStr = substr($result['date'], 0, 4);
+                            $todoYear = (int)$todoYearStr;
                             $todoDateStr = substr($result['date'], 8);
                             $todoDate = (int)$todoDateStr;
                             if ($result['done'] == 0) {
-                                if ($todoDate > $currentDate) {
+                                if ($todoYear > $currentYear || $todoDate > $currentDate) {
 
                         ?>
                                     <div class="card">
@@ -232,7 +226,6 @@ $currentDate = (int)$str;
             </div>
         </div>
     </div>
-
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
     <script src="./js/app.js"></script>
 </body>

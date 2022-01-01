@@ -1,6 +1,6 @@
 <?php
 session_start();
-$conn = mysqli_connect("localhost", "root", "", "todos");
+$conn = mysqli_connect("localhost", "root", "2021->2022", "todos");
 $username = $_SESSION['username'];
 
 if (!$username) {
@@ -11,21 +11,15 @@ if (mysqli_connect_error()) {
     die($conn->connect_error);
 } else {
     $results = mysqli_query($conn, "SELECT * FROM `todos`  WHERE `user` = " . $_SESSION['userid'] . " ORDER BY id DESC");
-    // print_r($results);
-    // $results = mysqli_query($conn, "SELECT * FROM ".$_SESSION['userid']." ");
 }
 
 $json = file_get_contents('timezones.json');
 $json_data = json_decode($json, true);
-// foreach ($json_data as $key => $value) {
-//     echo var_dump($value['group']);
-// }
 
 $timezone = new DateTime("now", new DateTimeZone('America/los_angeles'));
 $date = $timezone->format('Y-m-d');
 $str =  substr($date, 8);
 $currentDate = (int)$str;
-
 $ip_address = file_get_contents('http://checkip.dyndns.com/');
 $PublicIP = str_replace("Current IP Address: ", "", $ip_address);
 $json = file_get_contents("http://ip-api.com/json");
@@ -35,8 +29,8 @@ if (isset($_POST['submit'])) {
     $cookie_name = "zone";
     $cookie_value = $_POST['timezone'];
     setcookie($cookie_name, $cookie_value, time() + (86400 * 30), "/");
+    header("Location: index.php");
 }
-// echo $_COOKIE['zone'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -45,7 +39,6 @@ if (isset($_POST['submit'])) {
     <title>Todos</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
     <div class="wrapper">
         <div class="sidebar">
@@ -130,5 +123,4 @@ if (isset($_POST['submit'])) {
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
     <script src="./js/app.js"></script>
 </body>
-
 </html>
