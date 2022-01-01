@@ -1,5 +1,5 @@
 <?php
-$db = mysqli_connect("localhost", "root", "2021->2022", "todos");
+$db = mysqli_connect("localhost", "root", "", "todos");
 if (!$db) {
     die(mysqli_connect_error());
 }

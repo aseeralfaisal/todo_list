@@ -1,6 +1,6 @@
 <?php
 session_start();
-$conn = mysqli_connect("localhost", "root", "2021->2022", "todos");
+$conn = mysqli_connect("localhost", "root", "", "todos");
 $username = $_SESSION['username'];
 if (!$username) {
     header("Location: ./login.php");
@@ -117,7 +117,7 @@ $currentDate = (int)$str;
                             $todoDateStr = substr($result['date'], 8);
                             $todoDate = (int)$todoDateStr;
                             if ($result['done'] == 0) {
-                                if ($todoYear > $currentYear || $todoDate > $currentDate) {
+                                if ($currentYear <= $todoYear || $currentDate > $todoDate) {
 
                         ?>
                                     <div class="card">

@@ -1,6 +1,6 @@
 <?php
 session_start();
-$conn = mysqli_connect("localhost", "root", "2021->2022", "todos");
+$conn = mysqli_connect("localhost", "root", "", "todos");
 $username = $_SESSION['username'];
 
 if (!$username) {
