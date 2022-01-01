@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost";
 $dbUsername = "root";
-$dbPassword = "2021->2022";
+$dbPassword = "";
 $dbName = "todos";
 
 $conn = mysqli_connect($servername, $dbUsername, $dbPassword, $dbName);
